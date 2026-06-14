@@ -1,0 +1,670 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Base palette */
+  --bg-canvas:    #0b0d12;
+  --bg-base:      #0f1117;
+  --bg-surface:   #161922;
+  --bg-elevated:  #1c2030;
+  --bg-overlay:   #222840;
+  --bg-hover:     #272d42;
+  --bg-active:    #2e3550;
+
+  /* Borders */
+  --border-subtle:  rgba(255,255,255,0.05);
+  --border-default: rgba(255,255,255,0.09);
+  --border-strong:  rgba(255,255,255,0.15);
+
+  /* Accent – electric indigo */
+  --accent:        #6c63ff;
+  --accent-dim:    rgba(108,99,255,0.15);
+  --accent-glow:   rgba(108,99,255,0.35);
+  --accent-light:  #9b95ff;
+
+  /* Semantic */
+  --green:   #22d3a5;
+  --amber:   #fbbf24;
+  --red:     #f87171;
+  --cyan:    #22d3ee;
+  --purple:  #a78bfa;
+  --orange:  #fb923c;
+  --pink:    #f472b6;
+  --teal:    #2dd4bf;
+
+  /* Text */
+  --text-primary:   #f0f2ff;
+  --text-secondary: #8b92b3;
+  --text-muted:     #525874;
+  --text-faint:     #363a52;
+
+  /* Node */
+  --node-w:      260px;
+  --node-radius: 12px;
+  --node-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04) inset;
+  --node-shadow-selected: 0 0 0 2px var(--accent), 0 8px 40px rgba(108,99,255,0.3);
+
+  /* Handle */
+  --handle-size: 14px;
+  --handle-border: 2px;
+}
+
+html, body, #root { height: 100%; width: 100%; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ────────────────────────────────────────────────
+   REACTFLOW CANVAS OVERRIDES
+──────────────────────────────────────────────── */
+.react-flow { background: var(--bg-canvas) !important; }
+.react-flow__pane { cursor: default !important; }
+
+/* Handles */
+.react-flow__handle {
+  width:  var(--handle-size) !important;
+  height: var(--handle-size) !important;
+  border-radius: 50% !important;
+  border: var(--handle-border) solid rgba(255,255,255,0.2) !important;
+  background: var(--bg-elevated) !important;
+  transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  z-index: 10 !important;
+}
+.react-flow__handle:hover,
+.react-flow__handle.react-flow__handle-connecting {
+  background: var(--accent) !important;
+  border-color: var(--accent-light) !important;
+  box-shadow: 0 0 0 4px var(--accent-glow), 0 0 12px var(--accent) !important;
+  transform: scale(1.35) !important;
+}
+.react-flow__handle-left  { left:  -7px !important; }
+.react-flow__handle-right { right: -7px !important; }
+
+/* Edges */
+.react-flow__edge-path {
+  stroke: var(--accent) !important;
+  stroke-width: 2 !important;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--accent-light) !important;
+  opacity: 1;
+  stroke-width: 2.5 !important;
+}
+.react-flow__edge-path.animated {
+  stroke-dasharray: 8 4;
+  animation: dash 1.2s linear infinite;
+}
+@keyframes dash { to { stroke-dashoffset: -24; } }
+
+/* Arrow */
+.react-flow__arrowhead polyline { stroke: var(--accent) !important; fill: var(--accent) !important; }
+
+/* Connection line */
+.react-flow__connection-path {
+  stroke: var(--accent-light) !important;
+  stroke-width: 2 !important;
+  stroke-dasharray: 6 3;
+  opacity: 0.8;
+}
+
+/* Controls */
+.react-flow__controls {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+  left: 16px !important;
+  bottom: 16px !important;
+}
+.react-flow__controls-button {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+  width: 36px !important;
+  height: 36px !important;
+  transition: background 0.15s, fill 0.15s !important;
+}
+.react-flow__controls-button:last-child { border-bottom: none !important; }
+.react-flow__controls-button:hover {
+  background: var(--bg-hover) !important;
+  fill: var(--text-primary) !important;
+}
+.react-flow__controls-button svg { width: 14px; height: 14px; }
+
+/* MiniMap */
+.react-flow__minimap {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+  right: 16px !important;
+  bottom: 16px !important;
+}
+.react-flow__minimap-mask { fill: rgba(11,13,18,0.75) !important; }
+.react-flow__minimap-node { fill: var(--accent) !important; opacity: 0.6; }
+
+/* Selection box */
+.react-flow__selection {
+  background: rgba(108,99,255,0.08) !important;
+  border: 1px solid var(--accent) !important;
+}
+
+/* Node selected ring */
+.react-flow__node.selected > div,
+.react-flow__node:focus > div {
+  box-shadow: var(--node-shadow-selected) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ────────────────────────────────────────────────
+   NODE DESIGN SYSTEM
+──────────────────────────────────────────────── */
+.vs-node {
+  width: var(--node-w);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--node-radius);
+  box-shadow: var(--node-shadow);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: visible;
+}
+.vs-node:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--node-shadow), 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+.vs-node__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: var(--node-radius) var(--node-radius) 0 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+}
+
+.vs-node__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.vs-node__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vs-node__status {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vs-node__body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vs-node__description {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding: 8px 14px 2px;
+}
+
+/* ────────────────────────────────────────────────
+   CONNECTION PORTS (handle rows)
+   Each row is its own positioning context, so a
+   handle is always centered on *its own row* —
+   not on a fixed pixel offset from the node top.
+   This keeps handles aligned with their labels no
+   matter how the node's overall height changes.
+──────────────────────────────────────────────── */
+.vs-node__ports {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.vs-port-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 26px;
+}
+
+.vs-port {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 65%;
+}
+
+.vs-port--in {
+  padding-left: 14px;
+}
+
+.vs-port--out {
+  padding-right: 14px;
+  margin-left: auto;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.vs-port__label {
+  display: inline-block;
+  max-width: 100%;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ────────────────────────────────────────────────
+   FORM CONTROLS
+──────────────────────────────────────────────── */
+.vs-field { display: flex; flex-direction: column; gap: 5px; }
+
+.vs-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.vs-input,
+.vs-select,
+.vs-textarea {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 7px 10px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  line-height: 1.4;
+}
+.vs-input::placeholder,
+.vs-textarea::placeholder { color: var(--text-muted); }
+.vs-input:focus,
+.vs-select:focus,
+.vs-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+.vs-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23525874' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vs-textarea { resize: none; overflow: hidden; min-height: 72px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; }
+
+/* Variable pill */
+.vs-var-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: rgba(108,99,255,0.15);
+  border: 1px solid rgba(108,99,255,0.35);
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-light);
+  margin: 2px;
+}
+
+/* ────────────────────────────────────────────────
+   TOOLBAR
+──────────────────────────────────────────────── */
+.vs-toolbar {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 60px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+}
+
+.vs-toolbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.vs-toolbar__logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+.vs-toolbar__logo-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.vs-divider { width: 1px; height: 32px; background: var(--border-default); flex-shrink: 0; }
+
+.vs-toolbar__group { display: flex; flex-direction: column; gap: 3px; }
+.vs-toolbar__group-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.vs-toolbar__nodes { display: flex; gap: 6px; }
+
+/* Search */
+.vs-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: auto;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 200px;
+}
+.vs-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  width: 260px;
+}
+.vs-search svg { color: var(--text-muted); flex-shrink: 0; }
+.vs-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  width: 100%;
+}
+.vs-search input::placeholder { color: var(--text-muted); }
+
+/* Toolbar actions */
+.vs-toolbar__actions { display: flex; align-items: center; gap: 6px; margin-left: 8px; }
+.vs-icon-btn {
+  width: 34px; height: 34px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.vs-icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-strong); }
+.vs-icon-btn:active { transform: scale(0.93); }
+
+/* Draggable node chip */
+.vs-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+  cursor: grab;
+  transition: all 0.15s;
+  min-width: 64px;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.vs-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--chip-color, var(--accent));
+  opacity: 0;
+  transition: opacity 0.15s;
+  border-radius: inherit;
+}
+.vs-chip:hover { border-color: var(--chip-color, var(--accent)); transform: translateY(-1px); }
+.vs-chip:hover::before { opacity: 0.08; }
+.vs-chip:active { cursor: grabbing; transform: scale(0.95); }
+.vs-chip__icon {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  position: relative;
+  z-index: 1;
+}
+.vs-chip__label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+  transition: color 0.15s;
+}
+.vs-chip:hover .vs-chip__label { color: var(--text-primary); }
+
+/* ────────────────────────────────────────────────
+   CONTEXT MENU
+──────────────────────────────────────────────── */
+.vs-ctx-menu {
+  position: fixed;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  padding: 6px;
+  z-index: 9998;
+  min-width: 180px;
+  animation: ctxIn 0.12s ease;
+}
+@keyframes ctxIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.vs-ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.vs-ctx-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.vs-ctx-item.danger { color: var(--red); }
+.vs-ctx-item.danger:hover { background: rgba(248,113,113,0.1); color: var(--red); }
+.vs-ctx-item svg { opacity: 0.7; flex-shrink: 0; }
+.vs-ctx-sep { height: 1px; background: var(--border-subtle); margin: 4px 0; }
+.vs-ctx-shortcut { margin-left: auto; font-size: 10px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+
+/* ────────────────────────────────────────────────
+   BOTTOM BAR / SUBMIT
+──────────────────────────────────────────────── */
+.vs-statusbar {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 24px;
+  flex-shrink: 0;
+  position: relative;
+}
+.vs-statusbar__info {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.vs-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 16px var(--accent-glow);
+  letter-spacing: 0.01em;
+}
+.vs-btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+.vs-btn-primary:active { transform: translateY(0); }
+.vs-btn-primary:disabled { background: var(--bg-hover); color: var(--text-muted); box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* ────────────────────────────────────────────────
+   RESULT MODAL
+──────────────────────────────────────────────── */
+.vs-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+.vs-modal {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 28px;
+  min-width: 360px;
+  max-width: 460px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset;
+  animation: slideUp 0.22s ease;
+}
+.vs-modal__header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.vs-modal__icon { width: 42px; height: 42px; border-radius: 11px; background: var(--accent-dim); border: 1px solid var(--accent-glow); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.vs-modal__title { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.vs-modal__subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.vs-stat-card { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 9px; margin-bottom: 8px; }
+.vs-stat-card__label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.vs-stat-card__value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.vs-stat-card__value.accent { color: var(--accent-light); }
+.vs-stat-card__value.green  { color: var(--green); }
+.vs-stat-card__value.red    { color: var(--red); }
+.vs-modal__close { width: 100%; margin-top: 20px; padding: 11px; background: var(--bg-hover); border: 1px solid var(--border-default); border-radius: 9px; color: var(--text-secondary); font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.vs-modal__close:hover { background: var(--bg-active); color: var(--text-primary); }
+
+/* ────────────────────────────────────────────────
+   KEYBOARD SHORTCUT TOAST
+──────────────────────────────────────────────── */
+.vs-toast {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  z-index: 9997;
+  animation: toastIn 0.2s ease, toastOut 0.3s ease 2s forwards;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@keyframes toastIn  { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { to { opacity: 0; } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp  { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ────────────────────────────────────────────────
+   SEARCH RESULTS DROPDOWN
+──────────────────────────────────────────────── */
+.vs-search-results {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  z-index: 200;
+  min-width: 260px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px;
+  animation: ctxIn 0.12s ease;
+}
+.vs-search-result-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.vs-search-result-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.vs-search-result-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
